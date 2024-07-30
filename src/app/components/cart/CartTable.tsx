@@ -39,19 +39,9 @@ const CartTable = () => {
           {carts.map((item: any) => (
             <tr key={item.id}>
               <td className="border border-gray-200 px-4 py-2">
-                {item.image ? (
-                  <Image
-                    src={item.image}
-                    alt={item.name}
-                    width={50}
-                    height={50}
-                    className="object-cover"
-                  />
-                ) : (
-                  <div className="bg-yellow-300 px-4 py-2 text-center rounded-full text-sm">
-                    No Image!
-                  </div>
-                )}
+                <div className="bg-yellow-300 px-4 py-2 text-center rounded-full text-sm">
+                  No Image!
+                </div>
               </td>
               <td className="border border-gray-200 px-4 py-2 text-center">
                 {item.name}
@@ -73,7 +63,6 @@ const CartTable = () => {
             </tr>
           ))}
         </tbody>
-
       </table>
     </div>
   );

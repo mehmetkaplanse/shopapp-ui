@@ -15,22 +15,27 @@ interface CartState {
 }
 
 const fetchFromLocalStorage = (): CartItem[] => {
-  let cart = localStorage.getItem('cart');
-  if (cart) {
-    return JSON.parse(cart);
-  } else {
-    return [];
+  if (typeof window !== 'undefined') {
+    const cart = localStorage.getItem('cart');
+    return cart ? JSON.parse(cart) : [];
   }
+  return [];
 };
+
 
 const storeInLocalStorage = (data: CartItem[]) => {
   localStorage.setItem('cart', JSON.stringify(data));
 };
 
+const calculateCartTotals = (carts: CartItem[]) => {
+  const itemCount = carts.reduce((count, item) => count + item.quantity, 0);
+  const totalAmount = carts.reduce((total, item) => total + item.price * item.quantity, 0);
+  return { itemCount, totalAmount };
+};
+
 const initialState: CartState = {
   carts: fetchFromLocalStorage(),
-  itemCount: 0,
-  totalAmount: 0,
+  ...calculateCartTotals(fetchFromLocalStorage()),
 };
 
 const cartSlice = createSlice({
@@ -38,38 +43,40 @@ const cartSlice = createSlice({
   initialState,
   reducers: {
     addToCart: (state, action: PayloadAction<CartItem>) => {
-        const isItemInCart = state.carts.find((item) => item.id === action.payload.id);
-        if (isItemInCart) {
-            isItemInCart.quantity += action.payload.quantity;
-        } else {
-            state.carts.push(action.payload);
-        }
-        state.itemCount = state.carts.reduce((count, item) => count + item.quantity, 0);
-        state.totalAmount = state.carts.reduce((total, item) => total + item.price * item.quantity, 0);
-        storeInLocalStorage(state.carts);
+      const existingItem = state.carts.find((item) => item.id === action.payload.id);
+      if (existingItem) {
+        existingItem.quantity += action.payload.quantity;
+      } else {
+        state.carts.push(action.payload);
+      }
+      const { itemCount, totalAmount } = calculateCartTotals(state.carts);
+      state.itemCount = itemCount;
+      state.totalAmount = totalAmount;
+      storeInLocalStorage(state.carts);
     },
     removeFromCart: (state, action: PayloadAction<number>) => {
-        state.carts = state.carts.filter((item) => item.id !== action.payload);
-        state.itemCount = state.carts.reduce((count, item) => count + item.quantity, 0);
-        state.totalAmount = state.carts.reduce((total, item) => total + item.price * item.quantity, 0);
-        storeInLocalStorage(state.carts);
+      state.carts = state.carts.filter((item) => item.id !== action.payload);
+      const { itemCount, totalAmount } = calculateCartTotals(state.carts);
+      state.itemCount = itemCount;
+      state.totalAmount = totalAmount;
+      storeInLocalStorage(state.carts);
     },
     updateCartItemQuantity: (state, action: PayloadAction<{ id: number, quantity: number }>) => {
-        const item = state.carts.find((item) => item.id === action.payload.id);
-        if (item) {
-          item.quantity = action.payload.quantity;
-        }
-        state.itemCount = state.carts.reduce((count, item) => count + item.quantity, 0);
-        state.totalAmount = state.carts.reduce((total, item) => total + item.price * item.quantity, 0);
-        storeInLocalStorage(state.carts);
+      const item = state.carts.find((item) => item.id === action.payload.id);
+      if (item) {
+        item.quantity = action.payload.quantity;
+      }
+      const { itemCount, totalAmount } = calculateCartTotals(state.carts);
+      state.itemCount = itemCount;
+      state.totalAmount = totalAmount;
+      storeInLocalStorage(state.carts);
     },
     clearCart: (state) => {
-        state.carts = [];
-        state.itemCount = 0;
-        state.totalAmount = 0;
-        storeInLocalStorage(state.carts);
+      state.carts = [];
+      state.itemCount = 0;
+      state.totalAmount = 0;
+      storeInLocalStorage(state.carts);
     },
-
   },
 });
 
