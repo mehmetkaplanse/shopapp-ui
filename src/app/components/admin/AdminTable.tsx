@@ -1,0 +1,157 @@
+import { Product } from "@/app/products/model/Product";
+import getAllProducts from "@/app/products/service/getProductService";
+import Image from "next/image";
+import React, { useEffect, useState } from "react";
+import { MdDeleteForever, MdEdit } from "react-icons/md";
+import UpdateProductModal from "./UpdateProductModal";
+import DeleteProductModal from "./DeleteProductModal";
+import {  PuffLoader } from "react-spinners";
+import { Category } from "../sidebar/model/Category";
+import getAllCategories from "../sidebar/service/getCategoryService";
+
+const AdminTable = () => {
+  const [products, setProducts] = useState<Product[]>([]);
+  const [isEditModalOpen, setIsEditModalOpen] = useState<boolean | null>(false);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState<boolean | null>(
+    false
+  );
+  const [editProduct, setEditProduct] = useState<Product | null>(null);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [deleteProductId, setDeleteProductId] = useState<number | null>(null);
+  const [categories, setCategories] = useState<Category[]>([]);
+
+  const fetchProducts = async () => {
+    setIsLoading(true);
+    const data = await getAllProducts();
+    setProducts(data);
+    setIsLoading(false);
+  };
+
+  const fetchCategories = async () => {
+    const data = await getAllCategories();
+    setCategories(data);
+  };
+
+  
+  const getCategoryNameById = (id: number) => {
+    const category = categories.find(cat => cat.id === id);
+    return category ? category.name : "Unknown Category";
+  };
+
+  useEffect(() => {
+    fetchProducts();
+    fetchCategories()
+  }, []);
+
+  const handleEditProduct = (item: Product) => {
+    if (item) {
+      setIsEditModalOpen(true);
+      setEditProduct(item);
+    }
+  };
+
+  const handleDeleteModalOpen = (id: number) => {
+    setIsDeleteModalOpen(true);
+    setDeleteProductId(id);
+  }
+
+  if (isLoading) {
+    return (
+      <div className="flex justify-center items-center mt-[200px]">
+        <PuffLoader />
+      </div>
+    );
+  }
+
+  return (
+    <table className="table-auto border-collapse border border-gray-200 w-full text-left">
+      <thead className="bg-[#FFFFFF00]">
+        <tr>
+          <th className="border border-gray-200 px-4 py-2 bg-gray-100">
+            Ürün Resmi
+          </th>
+          <th className="border border-gray-200 px-4 py-2 bg-gray-100">
+            Ürün Adı
+          </th>
+          <th className="border border-gray-200 px-4 py-2 bg-gray-100">
+            Açıklama
+          </th>
+          <th className="border border-gray-200 px-4 py-2 bg-gray-100">
+            Fiyatı (TL)
+          </th>
+          <th className="border border-gray-200 px-4 py-2 bg-gray-100">
+            Kategori
+          </th>
+          <th className="border border-gray-200 px-4 py-2 bg-gray-100 text-center">
+            İşlem
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        {products.map((item: any) => (
+          <tr key={item.id}>
+            <td className="border border-gray-200 px-4 py-2">
+              {item.image ? (
+                <Image
+                  src={item.image}
+                  alt={item.name}
+                  width={50}
+                  height={50}
+                  className="object-cover"
+                />
+              ) : (
+                <div className="bg-yellow-300 px-4 py-2 text-center rounded-full text-sm">
+                  No Image!
+                </div>
+              )}
+            </td>
+            <td className="border border-gray-200 px-4 py-2">{item.name}</td>
+            <td className="border border-gray-200 px-4 py-2">
+              {item.explanation}
+            </td>
+            <td className="border border-gray-200 px-4 py-2">
+              {item.price} TL
+            </td>
+            <td className="border border-gray-200 px-4 py-2">
+              {
+                getCategoryNameById(item.category_id)
+              }
+            </td>
+            <td className="border border-gray-200 px-4 py-2 text-center">
+              <button
+                className="bg-primary text-white p-[6px] rounded-full text-center"
+                onClick={() => handleEditProduct(item)}
+              >
+                <MdEdit size={25} />
+              </button>
+              <button
+                className="bg-red-500 text-white p-[6px] rounded-full text-center ms-2"
+                onClick={() => handleDeleteModalOpen(item?.id)}
+              >
+                <MdDeleteForever size={25} />
+              </button>
+            </td>
+          </tr>
+        ))}
+      </tbody>
+      {isEditModalOpen && (
+        <UpdateProductModal
+          isOpen={isEditModalOpen}
+          onClose={() => setIsEditModalOpen(false)}
+          product={editProduct}
+          fetchProducts={fetchProducts}
+        />
+      )}
+      {isDeleteModalOpen && (
+        <DeleteProductModal
+          isOpen={isDeleteModalOpen}
+          onClose={() => setIsDeleteModalOpen(false)}
+          deleteProductId={deleteProductId}
+          fetchProducts={fetchProducts}
+        />
+      )}
+    </table>
+  );
+};
+
+export default AdminTable;
