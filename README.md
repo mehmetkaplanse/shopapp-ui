@@ -1,36 +1,36 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# ShopApp
+
+ShopApp is a full-stack e-commerce platform built with Spring Boot for the backend and Next.js with TypeScript for the frontend. The backend integrates PostgreSQL with Liquibase for database migrations and uses Swagger for API documentation. The application is deployed on Render.
+
+## Features
+
+- User roles: admin, user
+- Product and category management
+- User management
+- API documentation with Swagger
+- Frontend built with Next.js and TypeScript
 
 ## Getting Started
 
-First, run the development server:
+### Prerequisites
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+- Java 11 or higher
+- Node.js and npm
+- Docker (for deployment on Render)
+- PostgreSQL
+- Liquibase
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### Installation
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+1. **Clone the repository:**
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+   ```bash
+   git clone https://github.com/mehmetkaplanse/shopapp.git
+   cd shopapp
 
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+![resim_2024-07-31_105932132](https://github.com/user-attachments/assets/303a90be-a757-43ce-bfe1-fd6c4290d7fe)
+![Ekran görüntüsü 2024-07-31 105747](https://github.com/user-attachments/assets/fe13bc74-111c-45c0-a794-26b7dfe81de4)
+![Ekran görüntüsü 2024-07-31 105614](https://github.com/user-attachments/assets/18505b83-9dd8-4f03-906d-aa08354eff66)
+![Ekran görüntüsü 2024-07-31 105640](https://github.com/user-attachments/assets/f88f21d4-5e31-4f44-ba8f-5a86d2855a65)
+![Ekran görüntüsü 2024-07-31 105659](https://github.com/user-attachments/assets/daa24123-89df-42e4-b0fb-d21dfa0a5043)
+![Ekran görüntüsü 2024-07-31 105725](https://github.com/user-attachments/assets/fefb53d2-783f-4b13-b3c0-9519a742172a)
