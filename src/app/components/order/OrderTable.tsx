@@ -47,7 +47,7 @@ const OrderTable = () => {
   }
 
   return (
-    <table className="border-collapse border border-gray-200 w-full text-left">
+    <table className="border-collapse border border-gray-200 md:w-full w-screen text-left">
       <thead className="bg-[#FFFFFF00]">
         <tr>
           <th className="border border-gray-200 px-4 py-2 bg-gray-100 text-center">

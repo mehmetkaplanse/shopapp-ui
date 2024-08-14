@@ -17,15 +17,15 @@ const ProductsPage = () => {
   }, [dispatch]);
 
   return (
-    <div className="flex">
+    <div className="flex sm:flex-row flex-col">
       <Sidebar />
-      <div className="w-full bg-secondary h-[calc(100vh-51px)]">
+      <div className="w-full bg-secondary xl:h-[calc(100vh-51px)] h-full">
         {status === "loading" ? (
           <div className="flex justify-center items-center mt-[300px]">
             <PuffLoader />
           </div>
         ) : (
-          <div className="grid grid-cols-5">
+          <div className="flex flex-wrap sm:justify-normal justify-center mb-10 md:mx-20 mx-4">
             {products.map((product) => (
               <Product key={product?.id} product={product} />
             ))}

@@ -36,11 +36,11 @@ const Navbar = () => {
     window.location.href = "/login";
   };
   return (
-    <div className="bg-primary w-full text-white h-[51px] flex justify-between items-center">
-      <div className="flex gap-4 items-center">
+    <div className="bg-primary w-full text-white sm:h-[51px] h-[60px] flex justify-between items-center">
+      <div className="flex gap-1 sm:gap-4 items-center">
         <Link
           href={"/"}
-          className="ms-4 font-semibold text-lg shadow-xl border px-2 rounded-full"
+          className="sm:ms-4 ms-1 font-semibold text-lg shadow-xl border px-2 rounded-full"
         >
           shopApp
         </Link>
@@ -51,7 +51,7 @@ const Navbar = () => {
           />
         )}
       </div>
-      <div className="flex items-center gap-6 me-8 relative">
+      <div className="flex items-center gap-6 sm:me-8 me-3 relative">
         <div className="relative">
           <FiUser
             size={25}

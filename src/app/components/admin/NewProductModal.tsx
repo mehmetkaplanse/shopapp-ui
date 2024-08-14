@@ -73,7 +73,7 @@ const NewProductModal = ({
 
   return (
     <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 ">
-      <div className="bg-white p-10 rounded-lg w-[669px] h-[529px] relative">
+      <div className="bg-white md:p-10 p-6 rounded-lg md:w-[669px] md:h-[529px] relative md:mx-0 mx-2">
         <button
           onClick={onClose}
           className="absolute top-4 right-4 text-gray-500 hover:text-gray-700 text-3xl font-bold"
@@ -83,8 +83,8 @@ const NewProductModal = ({
         <h2 className="text-center text-primary text-2xl font-bold mb-10">
           ADD PRODUCT
         </h2>
-        <form className="space-y-8">
-          <div className="flex justify-between items-center h-full space-x-4">
+        <form className="md:space-y-8 space-y-4">
+          <div className="flex md:flex-row flex-col gap-4 justify-between md:items-center h-full md:space-x-4">
             <div className="flex-1">
               <input
                 type="text"
@@ -114,7 +114,7 @@ const NewProductModal = ({
             </div>
           </div>
 
-          <div className="flex space-x-4">
+          <div className="flex md:space-x-4 md:flex-row flex-col gap-4">
             <input
               type="number"
               placeholder="Price"

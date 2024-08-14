@@ -7,7 +7,7 @@ import DeleteProductModal from "./DeleteProductModal";
 import { PuffLoader } from "react-spinners";
 import { Category } from "../sidebar/model/Category";
 import getAllCategories from "../sidebar/service/Category.Service";
-import noImage from '../../../assets/images/noImage.jpg'
+import noImage from "../../../assets/images/noImage.jpg";
 import getAllProducts from "./service/Product.Service";
 
 const AdminTable = () => {
@@ -64,7 +64,7 @@ const AdminTable = () => {
   }
 
   return (
-    <table className="table-auto border-collapse border border-gray-200 w-full text-left">
+    <table className="md:mx-0 mx-4  border-collapse border border-gray-200 w-full text-left md:text-base text-sm">
       <thead className="bg-[#FFFFFF00]">
         <tr>
           <th className="border border-gray-200 px-4 py-2 bg-gray-100">
@@ -125,19 +125,21 @@ const AdminTable = () => {
             <td className="border border-gray-200 px-4 py-2">
               {getCategoryNameById(item.category_id)}
             </td>
-            <td className="border border-gray-200 px-4 py-2 text-center">
-              <button
-                className="bg-primary text-white p-[6px] rounded-full text-center"
-                onClick={() => handleEditProduct(item)}
-              >
-                <MdEdit size={25} />
-              </button>
-              <button
-                className="bg-red-500 text-white p-[6px] rounded-full text-center ms-2"
-                onClick={() => handleDeleteModalOpen(item?.id)}
-              >
-                <MdDeleteForever size={25} />
-              </button>
+            <td className="border border-gray-200 px-4 py-2">
+              <div className="flex md:gap-2 gap-1 justify-center">
+                <button
+                  className="bg-primary text-white p-[6px] rounded-full text-center"
+                  onClick={() => handleEditProduct(item)}
+                >
+                  <MdEdit size={25} />
+                </button>
+                <button
+                  className="bg-red-500 text-white p-[6px] rounded-full text-center ms-2"
+                  onClick={() => handleDeleteModalOpen(item?.id)}
+                >
+                  <MdDeleteForever size={25} />
+                </button>
+              </div>
             </td>
           </tr>
         ))}

@@ -88,7 +88,7 @@ const UpdateProductModal: React.FC<UpdateProductModalProps> = ({
   }, [imageUrl]);
   return (
     <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 ">
-      <div className="bg-white p-10 rounded-lg w-[669px] h-[529px] relative">
+      <div className="bg-white p-10 rounded-lg w-[669px] md:h-[529px] relative md:mx-0 mx-2">
         <button
           onClick={onClose}
           className="absolute top-4 right-4 text-gray-500 hover:text-gray-700 text-3xl font-bold"
@@ -104,7 +104,7 @@ const UpdateProductModal: React.FC<UpdateProductModalProps> = ({
           </div>
         ) : (
           <form className="space-y-8">
-            <div className="flex justify-between items-center space-x-4">
+            <div className="flex md:flex-row flex-col gap-4 justify-between md:items-center md:space-x-4">
               <div className="flex-1 h-full">
                 <input
                   type="text"
@@ -138,7 +138,7 @@ const UpdateProductModal: React.FC<UpdateProductModalProps> = ({
                 )}
               </div>
             </div>
-            <div className="flex space-x-4">
+            <div className="flex md:flex-row flex-col gap-4 md:space-x-4">
               <input
                 type="number"
                 placeholder="Price"

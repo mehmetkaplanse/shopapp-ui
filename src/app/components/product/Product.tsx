@@ -20,7 +20,7 @@ const Product: React.FC<ProductProps> = ({ product }) => {
     dispatch(addToCart({ ...product, quantity }));
   };
   return (
-    <div className="bg-white w-[217px] ms-8 mt-14 flex flex-col gap-2 items-center py-4 rounded-3xl shadow-xl">
+    <div className="bg-white sm:w-[217px] w-full sm:ms-8 ms-0 mt-14 flex flex-col gap-2 items-center py-4 rounded-3xl shadow-xl">
       <Link href={`/products/${productId}`} className="h-[170px] w-[120px]">
         {product.image ? (
           <Image

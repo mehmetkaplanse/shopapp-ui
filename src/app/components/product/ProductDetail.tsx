@@ -37,7 +37,7 @@ const ProductDetail: React.FC<ProductDetailProps> = ({ productId }) => {
   }, []);
   return (
     <div className=" flex justify-center">
-      <div className="bg-white w-[784px] h-[427px] shadow-xl rounded-2xl mt-[104px]">
+      <div className="bg-white md:w-[784px] w-[350px] md:h-[427px] shadow-xl rounded-2xl mt-[104px]">
         {isLoading ? (
           <div className="flex justify-center items-center mt-[180px]">
             <PuffLoader />
@@ -64,10 +64,10 @@ const ProductDetail: React.FC<ProductDetailProps> = ({ productId }) => {
               )}
             </div>
             <div className="text-xs mt-4">{product?.name}</div>
-            <p className="text-xs mx-[177px] mt-2">{product?.explanation}</p>
+            <p className="text-xs md:mx-[177px] mx-[30px] mt-2">{product?.explanation}</p>
             <div className="text-xs mt-2">{product?.price} TL</div>
             <button
-              className="bg-primary text-white w-[105px] h-[30px] rounded-full text-xs mt-10"
+              className="bg-primary text-white w-[105px] h-[30px] rounded-full text-xs mt-10 my-4"
               onClick={handleAddToCart}
             >
               Sepete Ekle
