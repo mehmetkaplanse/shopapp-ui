@@ -1,13 +1,14 @@
 import { Product } from "@/app/products/model/Product";
-import getAllProducts from "@/app/products/service/getProductService";
 import Image from "next/image";
 import React, { useEffect, useState } from "react";
 import { MdDeleteForever, MdEdit } from "react-icons/md";
 import UpdateProductModal from "./UpdateProductModal";
 import DeleteProductModal from "./DeleteProductModal";
-import {  PuffLoader } from "react-spinners";
+import { PuffLoader } from "react-spinners";
 import { Category } from "../sidebar/model/Category";
-import getAllCategories from "../sidebar/service/getCategoryService";
+import getAllCategories from "../sidebar/service/Category.Service";
+import noImage from '../../../assets/images/noImage.jpg'
+import getAllProducts from "./service/Product.Service";
 
 const AdminTable = () => {
   const [products, setProducts] = useState<Product[]>([]);
@@ -32,15 +33,14 @@ const AdminTable = () => {
     setCategories(data);
   };
 
-  
   const getCategoryNameById = (id: number) => {
-    const category = categories.find(cat => cat.id === id);
+    const category = categories.find((cat) => cat.id === id);
     return category ? category.name : "Unknown Category";
   };
 
   useEffect(() => {
     fetchProducts();
-    fetchCategories()
+    fetchCategories();
   }, []);
 
   const handleEditProduct = (item: Product) => {
@@ -53,7 +53,7 @@ const AdminTable = () => {
   const handleDeleteModalOpen = (id: number) => {
     setIsDeleteModalOpen(true);
     setDeleteProductId(id);
-  }
+  };
 
   if (isLoading) {
     return (
@@ -90,32 +90,40 @@ const AdminTable = () => {
       <tbody>
         {products.map((item: any) => (
           <tr key={item.id}>
-            <td className="border border-gray-200 px-4 py-2">
+            <td className="border border-gray-200 px-4 py-2 flex items-center justify-center ">
               {item.image ? (
-                <Image
-                  src={item.image}
-                  alt={item.name}
-                  width={50}
-                  height={50}
-                  className="object-cover"
-                />
+                <div className="w-[60px] h-[60px]">
+                  <Image
+                    src={item.image}
+                    alt={item.name}
+                    width={60}
+                    height={60}
+                    className="object-cover w-full h-full"
+                  />
+                </div>
               ) : (
-                <div className="bg-yellow-300 px-4 py-2 text-center rounded-full text-sm">
-                  No Image!
+                <div className="w-[60px] h-[60px]">
+                  <Image
+                    src={noImage}
+                    alt={item.name}
+                    width={60}
+                    height={60}
+                    className="object-cover w-full h-full"
+                  />
                 </div>
               )}
             </td>
             <td className="border border-gray-200 px-4 py-2">{item.name}</td>
             <td className="border border-gray-200 px-4 py-2">
-              {item.explanation}
+              {item.explanation.length > 40
+                ? item.explanation.substring(0, 40) + "..."
+                : item.explanation}
             </td>
             <td className="border border-gray-200 px-4 py-2">
               {item.price} TL
             </td>
             <td className="border border-gray-200 px-4 py-2">
-              {
-                getCategoryNameById(item.category_id)
-              }
+              {getCategoryNameById(item.category_id)}
             </td>
             <td className="border border-gray-200 px-4 py-2 text-center">
               <button

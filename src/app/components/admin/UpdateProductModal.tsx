@@ -1,12 +1,17 @@
 import { Product } from "@/app/products/model/Product";
 import React, { useEffect, useState } from "react";
-import getAllCategories from "../sidebar/service/getCategoryService";
+import getAllCategories from "../sidebar/service/Category.Service";
 import { Category } from "../sidebar/model/Category";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { PuffLoader } from "react-spinners";
-import updateProduct from "./service/updateProductService";
 import { UpdateProductModel } from "./model/UpdateProductModel";
 import toast from "react-hot-toast";
+import Image from "next/image";
+import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
+import { storage } from "@/config/config";
+import { v4 } from "uuid";
+import noImage from '../../../assets/images/noImage.jpg'
+import { updateProduct } from "./service/Product.Service";
 
 interface UpdateProductModalProps {
   isOpen: boolean;
@@ -19,14 +24,18 @@ const UpdateProductModal: React.FC<UpdateProductModalProps> = ({
   isOpen,
   onClose,
   product,
-  fetchProducts
+  fetchProducts,
 }) => {
   const [categories, setCategories] = useState<Category[] | null>([]);
   const { register, handleSubmit } = useForm<UpdateProductModel>();
   const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [imageUrl, setImageUrl] = useState<string | null>(
+    product?.image || null
+  );
   const onSubmit: SubmitHandler<UpdateProductModel> = async (data) => {
-    if(data) {
-      handleUpdateProduct(data);
+    if (imageUrl !== null) {
+      data.image = imageUrl;
+      await handleUpdateProduct(data);
     }
   };
 
@@ -40,20 +49,43 @@ const UpdateProductModal: React.FC<UpdateProductModalProps> = ({
   };
 
   const handleUpdateProduct = async (data: UpdateProductModel) => {
-    if(product?.id) {
+    if (product?.id) {
       const res = await updateProduct(product?.id, data);
-      if(res) {
-        onClose()
-        toast.success("Product updated succesfully.")
+      if (res) {
+        onClose();
+        toast.success("Product updated succesfully.");
         fetchProducts();
       }
     }
-  }
+  };
+
+  const onChangeImage = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files.length > 0) {
+      uploadImage(e.target.files[0]);
+    }
+  };
+
+  const uploadImage = (image: File) => {
+    if (image == null) return;
+    const imageRef = ref(storage, `images/${image.name + v4()}`);
+    uploadBytes(imageRef, image).then((snapshot) => {
+      getDownloadURL(snapshot.ref).then((url) => {
+        setImageUrl(url);
+        setIsLoading(false);
+        toast.success("Image updated successfully.");
+      });
+    });
+  };
 
   useEffect(() => {
-
     fetchCategories();
   }, []);
+
+  useEffect(() => {
+    if (imageUrl) {
+      setImageUrl(imageUrl);
+    }
+  }, [imageUrl]);
   return (
     <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 ">
       <div className="bg-white p-10 rounded-lg w-[669px] h-[529px] relative">
@@ -72,24 +104,43 @@ const UpdateProductModal: React.FC<UpdateProductModalProps> = ({
           </div>
         ) : (
           <form className="space-y-8">
-            <div className="flex space-x-4">
-              <input
-                type="text"
-                placeholder="Product Name"
-                className="w-full px-4 py-4 border rounded-md"
-                {...register("name")}
-                defaultValue={product?.name}
-              />
-              <input
-                type="file"
-                placeholder="Add Photo"
-                disabled
-                className="w-full px-4 py-4 border rounded-md"
-              />
+            <div className="flex justify-between items-center space-x-4">
+              <div className="flex-1 h-full">
+                <input
+                  type="text"
+                  placeholder="Product Name"
+                  {...register("name")}
+                  defaultValue={product?.name}
+                  className="w-full px-4 py-4 border rounded-md"
+                />
+              </div>
+              <div className="flex-1 flex items-center gap-2">
+                <input
+                  type="file"
+                  placeholder="Prev Photo"
+                  onChange={onChangeImage}
+                  className="w-full px-4 py-4 border rounded-md"
+                />
+                {imageUrl ? (
+                  <Image
+                    src={imageUrl}
+                    alt="Uploaded Image"
+                    width={40}
+                    height={40}
+                  />
+                ) : (
+                  <Image
+                    src={noImage}
+                    alt="Uploaded Image"
+                    width={40}
+                    height={40}
+                  />
+                )}
+              </div>
             </div>
             <div className="flex space-x-4">
               <input
-                type="text"
+                type="number"
                 placeholder="Price"
                 {...register("price")}
                 defaultValue={product?.price}

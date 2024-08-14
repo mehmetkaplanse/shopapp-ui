@@ -38,10 +38,14 @@ const CartTable = () => {
         <tbody>
           {carts.map((item: any) => (
             <tr key={item.id}>
-              <td className="border border-gray-200 px-4 py-2">
-                <div className="bg-yellow-300 px-4 py-2 text-center rounded-full text-sm">
-                  No Image!
-                </div>
+              <td className="border border-gray-200 px-4 py-2 flex items-center justify-center">
+                <Image 
+                  src={item.image}
+                  alt={item.name}
+                  width={30}
+                  height={30}
+                  className="object-cover"
+                />
               </td>
               <td className="border border-gray-200 px-4 py-2 text-center">
                 {item.name}

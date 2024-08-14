@@ -1,6 +1,6 @@
 import React from "react";
-import deleteProduct from "./service/deleteProductService";
 import toast from "react-hot-toast";
+import { deleteProduct } from "./service/Product.Service";
 
 interface DeleteProductModalProps {
   isOpen: boolean;

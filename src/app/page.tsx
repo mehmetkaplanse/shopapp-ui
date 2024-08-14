@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import ProductsPage from "./products/page";
 
 export default function Home() {

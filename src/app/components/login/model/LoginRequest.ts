@@ -1,7 +1,6 @@
 
 
-export interface Login {
-    id: number;
+export interface LoginRequest {
     username: string;
     password: string;
 }

@@ -1,40 +1,36 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import Sidebar from "../components/sidebar/Sidebar";
 import Product from "../components/product/Product";
-import getAllProducts from "./service/getProductService";
+import { PuffLoader } from "react-spinners";
+import { AppDispatch, RootState } from "@/redux/store";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchProducts } from "@/redux/productsSlice";
 import { Product as ProductModel } from "./model/Product";
-import { HashLoader, PuffLoader } from "react-spinners";
 
 const ProductsPage = () => {
-  const [products, setProducts] = useState<ProductModel[]>([]);
-  const [isLoading, setIsLoading] = useState<boolean>(true);
-
-  const fetchProducts = async () => {
-    setIsLoading(true);
-    const data = await getAllProducts();
-    setProducts(data);
-    setIsLoading(false);
-  };
+  const dispatch: AppDispatch = useDispatch();
+  const { items: products, status } = useSelector((state: RootState) => state.products);
 
   useEffect(() => {
-    fetchProducts();
-  }, []);
+    dispatch(fetchProducts());
+  }, [dispatch]);
 
   return (
     <div className="flex">
       <Sidebar />
-      <div className="w-full bg-secondary h-[calc(100vh-51px)] ">
-        {isLoading && (
-          <div className="flex justify-center items-center mt-[200px]">
+      <div className="w-full bg-secondary h-[calc(100vh-51px)]">
+        {status === "loading" ? (
+          <div className="flex justify-center items-center mt-[300px]">
             <PuffLoader />
           </div>
+        ) : (
+          <div className="grid grid-cols-5">
+            {products.map((product) => (
+              <Product key={product?.id} product={product} />
+            ))}
+          </div>
         )}
-        <div className="grid grid-cols-5">
-          {products.map((product) => (
-            <Product key={product?.id} product={product} />
-          ))}
-        </div>
       </div>
     </div>
   );

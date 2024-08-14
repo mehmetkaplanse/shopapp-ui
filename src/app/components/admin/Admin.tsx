@@ -6,6 +6,7 @@ import NewProductModal from "./NewProductModal";
 
 const Admin = () => {
   const [isModalOpen, setIsModalOpen] = useState<boolean | null>(false);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
   return (
     <div className="flex justify-center w-full h-[calc(100vh-58px)]">
       <div className="bg-white m-[26px] w-full flex flex-col shadow-xl">

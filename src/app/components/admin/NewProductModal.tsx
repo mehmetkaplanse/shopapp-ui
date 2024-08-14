@@ -1,11 +1,16 @@
 import { Product } from "@/app/products/model/Product";
 import React, { useEffect, useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
-import getAllCategories from "../sidebar/service/getCategoryService";
+import getAllCategories from "../sidebar/service/Category.Service";
 import { Category } from "../sidebar/model/Category";
 import { CreateProductModel } from "@/app/components/admin/model/CreateProductModel";
-import createProduct from "./service/createProductService";
 import toast from "react-hot-toast";
+import { ref, uploadBytes, getDownloadURL, listAll } from "firebase/storage";
+import { storage } from "@/config/config";
+import { v4 } from "uuid";
+import Image from "next/image";
+import { PuffLoader } from "react-spinners";
+import { createProduct } from "./service/Product.Service";
 
 const NewProductModal = ({
   isOpen,
@@ -15,9 +20,37 @@ const NewProductModal = ({
   onClose: () => void;
 }) => {
   const [categories, setCategories] = useState<Category[] | null>([]);
+  const [imageUrl, setImageUrl] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState<boolean | null>(false);
   const { register, handleSubmit } = useForm<CreateProductModel>();
   const onSubmit: SubmitHandler<CreateProductModel> = async (data) => {
-    handleCreateProduct(data);
+    if (imageUrl !== null) {
+      data.image = imageUrl;
+      await handleCreateProduct(data);
+      console.log("eklendii",data);
+      
+      onClose();
+    }
+  };
+
+  const onChangeImage = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files.length > 0) {
+      setIsLoading(true);
+      uploadImage(e.target.files[0]);
+    }
+  };
+
+  const uploadImage = (image: File) => {
+    if (image == null) return;
+    setIsLoading(true);
+    const imageRef = ref(storage, `images/${image.name + v4()}`);
+    uploadBytes(imageRef, image).then((snapshot) => {
+      getDownloadURL(snapshot.ref).then((url) => {
+        setImageUrl(url);
+        setIsLoading(false);
+        toast.success("Image uploaded successfully.");
+      });
+    });
   };
 
   const handleCreateProduct = async (data: CreateProductModel) => {
@@ -36,6 +69,7 @@ const NewProductModal = ({
   useEffect(() => {
     fetchCategories();
   }, []);
+  console.log("image url:", imageUrl);
 
   return (
     <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 ">
@@ -50,23 +84,39 @@ const NewProductModal = ({
           ADD PRODUCT
         </h2>
         <form className="space-y-8">
-          <div className="flex space-x-4">
-            <input
-              type="text"
-              placeholder="Product Name"
-              {...register("name")}
-              className="w-full px-4 py-4 border rounded-md"
-            />
-            <input
-              type="file"
-              placeholder="Add Photo"
-              disabled
-              className="w-full px-4 py-4 border rounded-md"
-            />
+          <div className="flex justify-between items-center h-full space-x-4">
+            <div className="flex-1">
+              <input
+                type="text"
+                placeholder="Product Name"
+                {...register("name")}
+                className="w-full px-4 py-4 border rounded-md"
+              />
+            </div>
+            <div className="flex-1 flex items-center gap-2">
+              <input
+                type="file"
+                placeholder="Add Photo"
+                onChange={onChangeImage}
+                className="w-full px-4 py-4 border rounded-md"
+              />
+              {isLoading ? (
+                <PuffLoader size={40} />
+              ) : imageUrl ? (
+                <Image
+                  src={imageUrl}
+                  alt="Uploaded Image"
+                  width={40}
+                  height={40}
+                  className="object-cover"
+                />
+              ) : null}
+            </div>
           </div>
+
           <div className="flex space-x-4">
             <input
-              type="text"
+              type="number"
               placeholder="Price"
               {...register("price")}
               className="w-full px-4 py-4 border rounded-md"
@@ -97,7 +147,7 @@ const NewProductModal = ({
             className="w-full px-4 py-4 border rounded-md h-24"
           />
           <button
-            type="submit"
+            type="button"
             className="w-full bg-primary text-white py-4 rounded-md font-bold text-xl mt-4"
             onClick={handleSubmit(onSubmit)}
           >

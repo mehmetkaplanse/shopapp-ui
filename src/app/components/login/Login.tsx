@@ -4,27 +4,38 @@ import React from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { FiUser } from "react-icons/fi";
 import { FiLock } from "react-icons/fi";
-import { Login as LoginModel } from "./model/Login";
-import login from "./service/loginService";
+import { LoginRequest } from "./model/LoginRequest";
+import login from "./service/Login.Service";
 import toast from "react-hot-toast";
-import { useRouter } from "next/navigation";
 
 
 const Login = () => {
-  const router = useRouter()
-  const { register, handleSubmit } = useForm<LoginModel>();
-  const onSubmit: SubmitHandler<LoginModel> = async (data) => {
-      const res = await login(data);
-      console.log(data,"dataaa");
-      if(res) {
-        toast.success("login successfully");
-        router.push("/")
+  const { register, handleSubmit } = useForm<LoginRequest>();
+  const onSubmit: SubmitHandler<LoginRequest> = async (data) => {
+    try {
+      if (data.username.trim() !== "" && data.password.trim() !== "") {
+        console.log(data,"dataaa");
+        
+        const res = await login(data);
+        if(res) {
+          toast.success("Sign in successfully!");
+          window.location.href = "/"
+        }
+        else {
+          toast.error("Incorrect username or password!");
+        }
       }
+      else {
+        toast.error("Please enter required fields!");
+      }
+    } catch (error) {
+      toast.error("An error occurred while sending the post.");
+    }
   };
 
   return (
     <div className="flex justify-center">
-      <div className="flex flex-col items-center bg-white rounded-2xl w-[383px] h-[487px] mt-[105px] shadow-xl">
+      <form className="flex flex-col items-center bg-white rounded-2xl w-[383px] h-[487px] mt-[105px] shadow-xl">
         <div className="text-primary uppercase text-[32px] font-semibold mt-[67px]">
           WELCOME
         </div>
@@ -60,7 +71,7 @@ const Login = () => {
             Sign up
           </Link>
         </div>
-      </div>
+      </form>
     </div>
   );
 };

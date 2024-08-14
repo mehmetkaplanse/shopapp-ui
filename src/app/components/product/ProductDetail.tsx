@@ -4,9 +4,10 @@ import React, { useEffect, useState } from "react";
 import productImage from "../../../assets/images/image 1.png";
 import { useDispatch } from "react-redux";
 import { addToCart } from "@/redux/cartSlice";
-import getProductById from "./service/getProductByIdService";
+import getProductById from "./service/ProductById.Service";
 import { Product } from "@/app/products/model/Product";
 import { PuffLoader } from "react-spinners";
+import noImage from "../../../assets/images/noImage.jpg";
 
 interface ProductDetailProps {
   productId: number;
@@ -44,11 +45,23 @@ const ProductDetail: React.FC<ProductDetailProps> = ({ productId }) => {
         ) : (
           <div className="flex justify-center mt-[25px] flex-col items-center">
             <div className="mb-4">
-              <Image
-                src={productImage}
-                alt="product_image"
-                className="w-32 h-44 object-cover"
-              />
+              {product?.image ? (
+                <Image
+                  src={product?.image || ""}
+                  alt="product_image"
+                  width={60}
+                  height={60}
+                  className="w-32 h-44 object-cover"
+                />
+              ) : (
+                <Image
+                  src={noImage}
+                  alt="product_image"
+                  width={50}
+                  height={50}
+                  className="w-32 h-44 object-cover"
+                />
+              )}
             </div>
             <div className="text-xs mt-4">{product?.name}</div>
             <p className="text-xs mx-[177px] mt-2">{product?.explanation}</p>

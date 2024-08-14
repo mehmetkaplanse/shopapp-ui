@@ -1,18 +1,58 @@
 "use client"
-import React from "react";
+import React, { useEffect, useState } from "react";
 import CartTable from "./CartTable";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "@/redux/store";
+import createOrder from "./service/CreateOrder.Service";
+import { OrderRequest } from "./model/OrderRequest";
+import { clearCart, removeFromCart } from "@/redux/cartSlice";
 
 const Cart = () => {
   const router = useRouter();
+  const dispatch = useDispatch();
+  const { carts } = useSelector((state: RootState) => state.cart);
+  const [currentUser, setCurrentUser] = useState<number | null>(null);
+  const [orderData, setOrderData] = useState<OrderRequest | null>(null);
+
   const continueShopping = () => {
     router.push("/products");
   };
-  const toBuy = () => {
-    router.push("/products")
-    toast.success('Shopping done successfuly!');
-  }
+
+  const toBuy = async () => {
+    if (orderData) {
+      try {
+        const res = await createOrder(orderData);
+        if (res) {
+          toast.success("Your order has received successfuly.");
+          dispatch(clearCart()); 
+          router.push("/order");
+        }
+      } catch (error) {
+        console.error("Sipariş oluşturulurken hata oluştu:", error);
+        toast.error("Something went wrong!");
+      }
+    } else {
+      toast.error("Please enter required fields!");
+    }
+  };
+
+  useEffect(() => {
+    const storedUser = localStorage.getItem("currentUser");
+    setCurrentUser(storedUser !== null ? Number(storedUser) : null); 
+  }, []);
+
+  useEffect(() => {
+    if (currentUser && carts.length > 0) {
+      setOrderData({
+        user_id: currentUser,
+        name: carts[0].name,
+        price: carts[0].price,
+        quantity: carts[0].quantity,
+      });
+    }
+  }, [currentUser, carts]);
 
   return (
     <div className="flex justify-center">
@@ -25,7 +65,10 @@ const Cart = () => {
           >
             Alışverişe Devam Et
           </button>
-          <button className="w-[252px] h-[38px] bg-primary text-white rounded-full text-sm mt-10" onClick={toBuy}>
+          <button
+            className="w-[252px] h-[38px] bg-primary text-white rounded-full text-sm mt-10"
+            onClick={toBuy}
+          >
             Satın Al
           </button>
         </div>
