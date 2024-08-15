@@ -15,6 +15,7 @@ const Cart = () => {
   const { carts } = useSelector((state: RootState) => state.cart);
   const [currentUser, setCurrentUser] = useState<number | null>(null);
   const [orderData, setOrderData] = useState<OrderRequest | null>(null);
+  const [isDisabled, setIsDisabled] = useState<boolean>(false);
 
   const continueShopping = () => {
     router.push("/products");
@@ -54,6 +55,8 @@ const Cart = () => {
         quantity: carts[0]?.quantity,
       });
     }
+    setIsDisabled(carts.length===0);
+
   }, [currentUser, carts]);
 
   return (
@@ -68,8 +71,11 @@ const Cart = () => {
             Alışverişe Devam Et
           </button>
           <button
-            className="w-[252px] h-[38px] bg-primary text-white rounded-full text-sm mt-10"
+            className={`w-[252px] h-[38px] bg-primary text-white rounded-full text-sm mt-10 ${
+              !orderData ? "bg-opacity-70 cursor-not-allowed" : ""
+            }`}
             onClick={toBuy}
+            disabled={isDisabled}
           >
             Satın Al
           </button>

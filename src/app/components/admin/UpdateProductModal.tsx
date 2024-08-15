@@ -12,6 +12,12 @@ import { storage } from "@/config/config";
 import { v4 } from "uuid";
 import noImage from '../../../assets/images/noImage.jpg'
 import { updateProduct } from "./service/Product.Service";
+import {
+  productNameValidation,
+  priceValidation,
+  categoryValidation,
+  explanationValidation,
+} from "./validation/CreateProductValidation";
 
 interface UpdateProductModalProps {
   isOpen: boolean;
@@ -27,7 +33,7 @@ const UpdateProductModal: React.FC<UpdateProductModalProps> = ({
   fetchProducts,
 }) => {
   const [categories, setCategories] = useState<Category[] | null>([]);
-  const { register, handleSubmit } = useForm<UpdateProductModel>();
+  const { register, handleSubmit, formState: {errors} } = useForm<UpdateProductModel>();
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [imageUrl, setImageUrl] = useState<string | null>(
     product?.image || null
@@ -88,7 +94,7 @@ const UpdateProductModal: React.FC<UpdateProductModalProps> = ({
   }, [imageUrl]);
   return (
     <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 ">
-      <div className="bg-white p-10 rounded-lg w-[669px] md:h-[529px] relative md:mx-0 mx-2">
+      <div className="bg-white p-10 rounded-lg w-[669px] md:min-h-[529px] relative md:mx-0 mx-2">
         <button
           onClick={onClose}
           className="absolute top-4 right-4 text-gray-500 hover:text-gray-700 text-3xl font-bold"
@@ -142,7 +148,7 @@ const UpdateProductModal: React.FC<UpdateProductModalProps> = ({
               <input
                 type="number"
                 placeholder="Price"
-                {...register("price")}
+                {...register("price", priceValidation)}
                 defaultValue={product?.price}
                 className="w-full px-4 py-4 border rounded-md"
               />

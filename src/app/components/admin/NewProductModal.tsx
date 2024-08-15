@@ -1,6 +1,6 @@
 import { Product } from "@/app/products/model/Product";
 import React, { useEffect, useState } from "react";
-import { SubmitHandler, useForm } from "react-hook-form";
+import { RegisterOptions, SubmitHandler, useForm } from "react-hook-form";
 import getAllCategories from "../sidebar/service/Category.Service";
 import { Category } from "../sidebar/model/Category";
 import { CreateProductModel } from "@/app/components/admin/model/CreateProductModel";
@@ -11,6 +11,12 @@ import { v4 } from "uuid";
 import Image from "next/image";
 import { PuffLoader } from "react-spinners";
 import { createProduct } from "./service/Product.Service";
+import {
+  productNameValidation,
+  priceValidation,
+  categoryValidation,
+  explanationValidation,
+} from "./validation/CreateProductValidation";
 
 const NewProductModal = ({
   isOpen,
@@ -22,13 +28,17 @@ const NewProductModal = ({
   const [categories, setCategories] = useState<Category[] | null>([]);
   const [imageUrl, setImageUrl] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState<boolean | null>(false);
-  const { register, handleSubmit } = useForm<CreateProductModel>();
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<CreateProductModel>();
   const onSubmit: SubmitHandler<CreateProductModel> = async (data) => {
     if (imageUrl !== null) {
       data.image = imageUrl;
       await handleCreateProduct(data);
-      console.log("eklendii",data);
-      
+      console.log("eklendii", data);
+
       onClose();
     }
   };
@@ -69,11 +79,10 @@ const NewProductModal = ({
   useEffect(() => {
     fetchCategories();
   }, []);
-  console.log("image url:", imageUrl);
 
   return (
     <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 ">
-      <div className="bg-white md:p-10 p-6 rounded-lg md:w-[669px] md:h-[529px] relative md:mx-0 mx-2">
+      <div className="bg-white md:p-10 p-6 rounded-lg md:w-[669px] md:min-h-[529px] relative md:mx-0 mx-2">
         <button
           onClick={onClose}
           className="absolute top-4 right-4 text-gray-500 hover:text-gray-700 text-3xl font-bold"
@@ -89,14 +98,16 @@ const NewProductModal = ({
               <input
                 type="text"
                 placeholder="Product Name"
-                {...register("name")}
+                {...register("name", productNameValidation)}
                 className="w-full px-4 py-4 border rounded-md"
               />
+              {errors.name && (
+                <span className="text-red-500 text-xs ms-1">{errors.name.message}</span>
+              )}
             </div>
             <div className="flex-1 flex items-center gap-2">
               <input
                 type="file"
-                placeholder="Add Photo"
                 onChange={onChangeImage}
                 className="w-full px-4 py-4 border rounded-md"
               />
@@ -115,37 +126,52 @@ const NewProductModal = ({
           </div>
 
           <div className="flex md:space-x-4 md:flex-row flex-col gap-4">
-            <input
-              type="number"
-              placeholder="Price"
-              {...register("price")}
-              className="w-full px-4 py-4 border rounded-md"
-            />
-            <select
-              className="w-full px-4 py-4 border rounded-md"
-              {...register("category_id")}
-            >
-              <option
-                value=""
-                disabled
-                selected
-                hidden
-                className="text-gray-500"
+            <div className="w-full">
+              <input
+                type="number"
+                placeholder="Price"
+                {...register("price", priceValidation)}
+                className="w-full px-4 py-4 border rounded-md"
+              />
+              {errors.price && (
+                <span className="text-red-500 text-xs ms-1">{errors.price.message}</span>
+              )}
+            </div>
+            <div className="w-full">
+              <select
+                className="w-full px-4 py-4 border rounded-md"
+                {...register("category_id", categoryValidation)}
               >
-                Select Category
-              </option>
-              {categories?.map((cat) => (
-                <option value={cat.id} key={cat.id}>
-                  {cat.name}
+                <option
+                  value=""
+                  disabled
+                  selected
+                  hidden
+                  className="text-gray-500"
+                >
+                  Select Category
                 </option>
-              ))}
-            </select>
+                {categories?.map((cat) => (
+                  <option value={cat.id} key={cat.id}>
+                    {cat.name}
+                  </option>
+                ))}
+              </select>
+              {errors.category_id && (
+                <span className="text-red-500 text-xs ms-1">
+                  {errors.category_id.message}
+                </span>
+              )}
+            </div>
           </div>
           <textarea
             placeholder="Write explanation here"
-            {...register("explanation")}
+            {...register("explanation", explanationValidation)}
             className="w-full px-4 py-4 border rounded-md h-24"
           />
+          {errors.explanation && (
+            <span className="text-red-500 text-xs ms-1">{errors.explanation.message}</span>
+          )}
           <button
             type="button"
             className="w-full bg-primary text-white py-4 rounded-md font-bold text-xl mt-4"
