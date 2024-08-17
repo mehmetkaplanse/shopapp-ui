@@ -1,36 +1,41 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# ShopApp
+
+ShopApp is a full-stack e-commerce platform built with Spring Boot for the backend and Next.js with TypeScript for the frontend. The backend integrates PostgreSQL with Liquibase for database migrations and uses Swagger for API documentation. The application is deployed on Render.
+
+## Features
+
+- User roles: admin, user
+- Product and category management
+- User management
+- API documentation with Swagger
+- Frontend built with Next.js and TypeScript
 
 ## Getting Started
 
-First, run the development server:
+### Prerequisites
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+- Java 11 or higher
+- Node.js and npm
+- PostgreSQL
+- Liquibase
+- Docker (for deployment on Render)
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### Installation
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+1. **Clone the repository:**
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+   ```bash
+   git clone https://github.com/mehmetkaplanse/shopapp.git
+   cd shopapp
 
-## Learn More
 
-To learn more about Next.js, take a look at the following resources:
+### Some Screenshots from the Project
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+![Ekran görüntüsü 2024-08-17 231610](https://github.com/user-attachments/assets/2e122769-4643-4c7b-822c-9f65a1793cda)
+![Ekran görüntüsü 2024-08-17 231649](https://github.com/user-attachments/assets/63d9e332-1c2b-4ba2-9ea5-83d5e6fd6f0a)
+![Ekran görüntüsü 2024-08-17 231706](https://github.com/user-attachments/assets/29372475-5d16-497e-9a45-8f4a821859e4)
+![Ekran görüntüsü 2024-08-17 231730](https://github.com/user-attachments/assets/bda753f1-7b8d-4302-a415-7184014cab8d)
+![Ekran görüntüsü 2024-08-17 231752](https://github.com/user-attachments/assets/0d87bf98-b16e-4a48-b8df-8a1c34703c50)
+![Ekran görüntüsü 2024-08-17 231817](https://github.com/user-attachments/assets/5af0adb1-8ee2-4a22-bbc3-af7d75ede2af)
+![Ekran görüntüsü 2024-08-17 231910](https://github.com/user-attachments/assets/0008d85d-9149-43a9-8227-51ec3d971344)
+![Untitled design](https://github.com/user-attachments/assets/2598e81a-d21c-48b0-9f6c-9b893c1d9f96)
