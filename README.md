@@ -2,6 +2,9 @@
 
 ShopApp is a full-stack e-commerce platform built with Spring Boot for the backend and Next.js with TypeScript for the frontend. The backend integrates PostgreSQL with Liquibase for database migrations and uses Swagger for API documentation. The application is deployed on Render.
 
+### Live Demo : https://shopapp-ui.vercel.app
+
+
 ## Features
 
 - User roles: admin, user
